@@ -1,50 +1,54 @@
 #pragma once
 #include <Arduino.h>
 
-class A4988{
+class A4988 {
+    int _enablepin;
+    int _pulsepin;
+    int _dirpin;
 
-    private:
-        int _enablepin;
-        int _pulepin;
-        int _dirpin;
-    
-    public:
-        A4988(int enb , int pls, int dir){
-            int _enablepin = enb;
-            int _pulepin = pul;
-            int _dirpin = dir;
+    // Constructor to set pins
+    A4988(int enb, int pul, int dir) {
+        _enablepin = enb;
+        _pulsepin  = pul;
+        _dirpin    = dir;
+    }
 
-        }
+    void begin() {
+        pinMode(_enablepin, OUTPUT);
+        pinMode(_pulsepin, OUTPUT);
+        pinMode(_dirpin, OUTPUT);
 
-        void begin(){
-            pinmode(_enablepin, LOW);
-            pinmode(_pulepin, LOW);
-            pinmode(_dirpin, HIGH);
-        }
-        void runstepperforward(int steps , int delayTime = 800){
-            digitalWrite(_dirpin, HIGH);
-            digitalWrite(_enablepin, LOW);
+        digitalWrite(_enablepin, LOW);
+        digitalWrite(_pulsepin, LOW);
+        digitalWrite(_dirpin, HIGH);
+    }
 
-            for (int i = 0; i < steps; i++) {
-                digitalWrite(_pulsepin, HIGH);
-                delayMicroseconds(delayTime);  // Smaller number = faster speed
-                digitalWrite(_pulsepin, LOW);
-                delayMicroseconds(delayTime);
-            }
-        }
-        void runstepperreverse(int steps, in delayTime = 800){
-            digitalWrite(_pulepin, LOW);
-            digitalWrite(_dirpin, LOW);
+    void runstepperforward(int steps, int delayTime) {
+        digitalWrite(_dirpin, HIGH);
+        digitalWrite(_enablepin, LOW);
 
-            for (int i = 0; i < steps; i++) {
-                digitalWrite(_pulsepin, HIGH);
-                delayMicroseconds(delayTime);  // Smaller number = faster speed
-                digitalWrite(_pulsepin, LOW);
-                delayMicroseconds(delayTime);
-            }
+        for (int i = 0; i < steps; i++) {
+            digitalWrite(_pulsepin, HIGH);
+            delayMicroseconds(delayTime);
+            digitalWrite(_pulsepin, LOW);
+            delayMicroseconds(delayTime);
         }
-        void stop(){
-            digitalWrite(_pulepin, LOW);
-            digitalWrite(_enablepin, HIGH);
+    }
+
+    void runstepperreverse(int steps, int delayTime) {
+        digitalWrite(_enablepin, LOW);
+        digitalWrite(_dirpin, LOW);
+
+        for (int i = 0; i < steps; i++) {
+            digitalWrite(_pulsepin, HIGH);
+            delayMicroseconds(delayTime);
+            digitalWrite(_pulsepin, LOW);
+            delayMicroseconds(delayTime);
         }
-}
+    }
+
+    void stop() {
+        digitalWrite(_pulsepin, LOW);
+        digitalWrite(_enablepin, HIGH);
+    }
+};
