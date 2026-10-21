@@ -58,7 +58,7 @@ class BTN8962TA
     void stopmotor()
     {
         analogWrite(rpwmA, 0);
-        analogWrite(rpwMB, 0);
+        analogWrite(rpwmB, 0);
         analogWrite(lpwmB, 0);
         analogWrite(lpwmA, 0);
     }
